@@ -118,13 +118,16 @@ jobs:
           target: "kittygram"
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
+        env:
+          ENV_DATA: ${{ secrets.ENV }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
+          envs: ENV_DATA
           script: |
             cd kittygram
-            echo ${{ secrets.SSH_KEY }} > .env
+            echo "$ENV_DATA" > .env
             # Выполняет pull образов с Docker Hub
             sudo docker compose -f docker-compose.yml pull
             # Перезапускает все контейнеры в Docker Compose

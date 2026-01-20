@@ -24,7 +24,7 @@ services:
   # Имя и описание контейнера с бэкендом:
   backend:
     # Из какого Dockerfile собирать образ для этого контейнера:
-    image: tihdizer/kittygram-backend:latest
+    image: tihdizer/kittygram_backend:latest
     restart: always
     env_file: .env
     volumes:
@@ -36,13 +36,13 @@ services:
   # Имя третьего контейнера. Это контейнер с фронтендом:
   frontend:
     env_file: .env
-    image: tihdizer/kittygram-frontend:latest
+    image: tihdizer/kittygram_frontend:latest
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
   # Контейнер с nginx для раздачи статики и проксирования запросов:
   nginx:
-    image: tihdizer/kittygram-nginx:latest
+    image: tihdizer/kittygram_gateway:latest
     env_file: .env
     ports:
       - "8000:80"

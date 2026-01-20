@@ -78,17 +78,6 @@ jobs:
         run: |
           cd backend/
           python manage.py test
-      - name: Pytests
-        env:
-          POSTGRES_USER: django_user
-          POSTGRES_PASSWORD: django_password
-          POSTGRES_DB: django_db
-          # Сервер БД запущен в Docker, но его порт проброшен на хост
-          # Поэтому подключаемся к 127.0.0.1:5432
-          DB_HOST: 127.0.0.1
-          DB_PORT: 5432
-        run: |
-          pytest tests/
 
   build_and_push_backtend_to_docker_hub:
     name: Push Backend Docker image to DockerHub
@@ -201,9 +190,7 @@ jobs:
   pytests:
     needs:
       # Дождёмся билда всех фронтенда, бэкенда и гейтвея:
-      - build_and_push_backtend_to_docker_hub
-      - build_and_push_gateway_to_docker_hub
-      - build_and_push_frontend_to_docker_hub
+      - deploy
     # Разворачиваем окружение:
     runs-on: ubuntu-latest
     steps:

@@ -1,0 +1,53 @@
+# Файл docker-compose.yml
+
+# Версия docker-compose:
+version: "3"
+
+# Перечень volume:
+volumes:
+  pg_data:
+  static:
+  media:
+
+# Перечень контейнеров:
+services:
+  # Имя и описание первого контейнера; имя выбирает разработчик.
+  # Это контейнер с базой данных:
+  postgres:
+    # Из какого образа запустить контейнер:
+    image: postgres:13.10
+    # Файл (или список файлов) с переменными окружения:
+    env_file: .env
+    # Какой volume подключить для этого контейнера:
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  # Имя и описание контейнера с бэкендом:
+  backend:
+    # Из какого Dockerfile собирать образ для этого контейнера:
+    image: tihdizer/kittygram-backend:latest
+    env_file: .env
+    volumes:
+      - static:/backend_static
+      - media:/app/media
+    # Какие контейнеры нужно запустить до старта этого контейнера:
+    depends_on:
+      - postgres
+  # Имя третьего контейнера. Это контейнер с фронтендом:
+  frontend:
+    env_file: .env
+    image: tihdizer/kittygram-frontend:latest
+    command: cp -r /app/build/. /frontend_static/
+    volumes:
+      - static:/frontend_static
+  # Контейнер с nginx для раздачи статики и проксирования запросов:
+  nginx:
+    image: tihdizer/kittygram-nginx:latest
+    env_file: .env
+    ports:
+      - "8000:80"
+    volumes:
+      - static:/usr/share/nginx/html/
+      - media:/usr/share/nginx/html/media/
+    depends_on:
+      - backend
+      - frontend

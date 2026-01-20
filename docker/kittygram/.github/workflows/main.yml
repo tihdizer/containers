@@ -114,7 +114,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: "docker-compose.yml"
+          source: "docker-compose.production.yml"
           target: "kittygram"
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
@@ -129,11 +129,11 @@ jobs:
             cd kittygram
             echo "$ENV_DATA" > .env
             # Выполняет pull образов с Docker Hub
-            sudo docker compose -f docker-compose.yml pull
+            sudo docker compose -f docker-compose.production.yml pull
             # Перезапускает все контейнеры в Docker Compose
-            sudo docker compose -f docker-compose.yml down
-            sudo docker compose -f docker-compose.yml up -d
+            sudo docker compose -f docker-compose.production.yml down
+            sudo docker compose -f docker-compose.production.yml up -d
             # Выполняет миграции и сбор статики
-            sudo docker compose -f docker-compose.yml exec backend python manage.py migrate
-            sudo docker compose -f docker-compose.yml exec backend python manage.py collectstatic
-            sudo docker compose -f docker-compose.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+            sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+            sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+            sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/

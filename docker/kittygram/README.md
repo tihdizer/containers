@@ -1,3 +1,5 @@
+![Статус сборки](https://github.com/tihdizer/Kittygram/actions/workflows/main.yml/badge.svg)
+
 #  Как работать с репозиторием финального задания
 
 ## Что нужно сделать

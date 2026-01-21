@@ -98,7 +98,7 @@ jobs:
         with:
           context: ./backend/
           push: true
-          tags: tihdizer/kittygram_backend:latest
+          tags: ${{ secrets.USER }}/kittygram_backend:latest
 
   build_and_push_gateway_to_docker_hub:
     name: Push Gateway Docker image to DockerHub
@@ -119,7 +119,7 @@ jobs:
         with:
           context: ./nginx/
           push: true
-          tags: tihdizer/kittygram_gateway:latest
+          tags: ${{ secrets.USER }}/kittygram_gateway:latest
 
   build_and_push_frontend_to_docker_hub:
     name: Push Frontend Docker image to DockerHub
@@ -140,7 +140,7 @@ jobs:
         with:
           context: ./frontend/
           push: true
-          tags: tihdizer/kittygram_frontend:latest
+          tags: ${{ secrets.USER }}/kittygram_frontend:latest
   deploy:
     runs-on: ubuntu-latest
     needs:
@@ -184,7 +184,7 @@ jobs:
             sudo docker compose -f docker-compose.production.yml up -d
             # Выполняет миграции и сбор статики
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
-            sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+            sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
             sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/
 
   pytests:
@@ -217,4 +217,10 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Деплой Kittygram успешно выполнен!
+          message: |
+            Деплой Kittygram успешно выполнен!
+            Автор пуша: ${{ github.actor }}
+            Сообщение коммита: ${{ github.event.commits[0].message }}
+
+            Репозиторий: ${{ github.repository }}
+            Коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}

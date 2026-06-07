@@ -24,11 +24,6 @@ variable "vm_1_name" {
   default = "vm-kittygram"
 }
 
-variable "aws_region" {
-  description = "AWS Region name"
-  type = string
-}
-
 variable "ssh_key" {
   description = "SSH Public Key"
   type = string

@@ -57,3 +57,8 @@ jobs:
         working-directory: ./infra
         if: ${{ github.event.inputs.action == 'destroy' }}
         run: terraform destroy -auto-approve
+
+      - name: Terraform Output
+        working-directory: ./infra
+        if: ${{ github.event.inputs.action == 'apply' }}
+        run: terraform output

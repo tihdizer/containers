@@ -45,7 +45,7 @@ services:
     image: tihdizer/kittygram_gateway:latest
     env_file: .env
     ports:
-      - "8000:80"
+      - "80:80"
     volumes:
       - static:/usr/share/nginx/html/
       - media:/usr/share/nginx/html/media/

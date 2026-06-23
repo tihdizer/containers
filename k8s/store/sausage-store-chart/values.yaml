@@ -18,7 +18,7 @@ frontend:
     path: /
     pathType: Prefix
   containerPort: 80
-  image: YOUR_DOCKERHUB/sausage-frontend:latest
+  image: tihdizer/sausage-frontend:latest
   resources:
     requests:
       memory: "128Mi"
@@ -45,7 +45,7 @@ backend:
   replicas: 1
   strategy:
   ### Опишите стратегию RollingUpdate для бэкенда
-  image: YOUR_DOCKERHUB/sausage-backend:latest
+  image: tihdizer/sausage-backend:latest
   imagePullPolicy: Always
   resources:
     requests:
@@ -66,6 +66,22 @@ backend-report:
 ### Приложение использует переменную PORT - порт, на котором оно запустится и DB - Uri-подключение к mongodb.
 ### DB положите в Secret, PORT в ConfigMap
 ### Опишите HPA для backend-report
+  image: tihdizer/sausage-backend-report:latest
+    replicas: 1
+    revisionHistoryLimit: 12
+    containerPort: 8080
+    env:
+      port: "8080"
+      db: "mongodb://root:rootpassword@mongodb:27017/sausage-store?authSource=admin"
+    strategy:
+      type: Recreate
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "50m"
+      limits:
+        memory: "128Mi"
+        cpu: "150m"
 
 infra:
   postgresql:
@@ -84,7 +100,16 @@ infra:
         memory: "256Mi"
         cpu: "300m"
   mongodb:
+    image: mongo:7.0
+    containerPort: 27017
+    storage: 1Gi
     env:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: rootpassword
-    containerPort: 27017
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "300m"

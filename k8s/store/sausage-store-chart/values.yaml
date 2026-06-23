@@ -5,9 +5,8 @@ global:
   ###  name: vault
   ###  vaultToken: someToken
 
-
 frontend:
-### В чарте frontend отсутствуют некоторые важные файлы. Поймите какие и опишите их.
+  ### В чарте frontend отсутствуют некоторые важные файлы. Поймите какие и опишите их.
   replicas: 1
   revisionHistoryLimit: 15
   strategy:
@@ -64,13 +63,26 @@ backend:
 backend-report:
 ### Опишите значения для backend-report
 ### Приложение должно использовать стратегию Recreate
-### Приложение использует переменную PORT - порт, на котором оно запустится и DB - Uri-подключение к mongodb. 
+### Приложение использует переменную PORT - порт, на котором оно запустится и DB - Uri-подключение к mongodb.
 ### DB положите в Secret, PORT в ConfigMap
 ### Опишите HPA для backend-report
 
 infra:
   postgresql:
-  ### Опишите необходимые переменные для развертывания PostgresQL в кластере Kubernetes
+    postgresql:
+    image: postgres:13-alpine
+    containerPort: 5432
+    database: sausage-store
+    username: store
+    password: storepassword
+    storage: 1Gi
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "300m"
   mongodb:
     env:
       MONGO_INITDB_ROOT_USERNAME: root

@@ -14,7 +14,9 @@ frontend:
   service:
     port: 80
   ingress:
-    host: YOUR_STUDENT_HOSTNAME.students-projects.ru # Корректный домен будет указан в задании
+    host: front-lapshin.2sem.students-projects.ru
+    className: nginx
+    tlsSecretName: 2sem-students-projects-wildcard-secret
     path: /
     pathType: Prefix
   containerPort: 80
@@ -68,7 +70,7 @@ backend-report:
 ### Опишите HPA для backend-report
   image: tihdizer/sausage-backend-report:latest
     replicas: 1
-    revisionHistoryLimit: 12
+    revisionHistoryLimit: 15
     containerPort: 8080
     env:
       port: "8080"

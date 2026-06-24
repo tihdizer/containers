@@ -7,7 +7,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.2</version>
         <relativePath/> <!-- lookup parent from repository -->
-    </parent> 
+    </parent>
     <groupId>com.yandex.practicum.devops</groupId>
     <artifactId>sausage-store</artifactId>
     <version>${env.VERSION}</version>
@@ -52,7 +52,7 @@
             <scope>import</scope>
         </dependency>
     </dependencies>
-    </dependencyManagement> 
+    </dependencyManagement>
 
     <dependencies>
 
@@ -61,12 +61,6 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
             <version>1.8.1</version>
         </dependency>
-
-    
-       <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-vault-config</artifactId>
-       </dependency> 
 
        <dependency>
             <groupId>org.springframework.boot</groupId>

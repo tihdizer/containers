@@ -2,9 +2,10 @@
 #а затем из него берём собранный артефакт и кладём его в новый образ, чтобы оставить в нём меньше лишнего
 
 # build
-FROM maven:3.8.2-openjdk-16-slim as builder
+FROM maven:3.8.2-openjdk-16-slim AS builder
 # задаём переменную VERSION, которая будет использоваться для сборки проекта
-ARG VERSION=${VERSION}
+ARG VERSION=0.1.0
+ENV VERSION=${VERSION}
 WORKDIR /usr/src/app
 COPY ./src ./src
 COPY *.xml ./
@@ -12,8 +13,9 @@ COPY *.xml ./
 RUN mvn package -Dversion.application=${VERSION}
 
 # release
-FROM openjdk:16-jdk-alpine
-ARG VERSION=${VERSION}
+FROM eclipse-temurin:17-jre-alpine-3.22
+ARG VERSION=0.1.0
+ENV VERSION=${VERSION}
 WORKDIR /app
 # создаём пользователя jaruser
 RUN addgroup --system jaruser \

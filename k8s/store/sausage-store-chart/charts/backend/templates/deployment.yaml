@@ -59,6 +59,11 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
                   key: log_path
+            - name: SPRING_DATA_MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-conf
+                  key: mongo_uri
           resources:
 {{ toYaml .Values.resources | indent 12 }} 
           ports:
@@ -81,6 +86,8 @@ spec:
               path: report_path
             - key: log_path
               path: log_path
+            - key: mongo_uri
+              path: mongo_uri
 ---
 apiVersion: autoscaling.k8s.io/v1
 kind: VerticalPodAutoscaler

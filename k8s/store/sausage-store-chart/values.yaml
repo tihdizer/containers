@@ -41,6 +41,7 @@ backend:
     postgresPassword: storepassword
     reportPath: /logs/reports
     logPath: /logs
+    mongoUri: "mongodb://root:rootpassword@mongodb:27017/sausage-store?authSource=admin"
   service:
     port: 8080
   revisionHistoryLimit: 15

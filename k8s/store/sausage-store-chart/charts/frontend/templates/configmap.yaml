@@ -30,7 +30,7 @@ data:
           listen       80;
 
           location / {
-              root   /usr/share/nginx/html;
+              root   /usr/share/nginx/html/frontend;
               index  index.html;
               try_files $uri $uri/ /index.html;
           }

@@ -1,0 +1,67 @@
+name: docker project
+
+services:
+  frontend:
+    # build: ./frontend
+    image: ${DOCKER_USER:-tihdizer}/docker-project-frontend:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      - bridge
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: ${FRONTEND_CPUS:-1}
+          memory: ${FRONTEND_RAM:-256M}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128M
+      - /var/cache/nginx/client_temp:rw,noexec,nosuid,size=256M
+      - /var/cache/nginx/proxy_temp:rw,noexec,nosuid,size=256M
+      - /var/cache/nginx/fastcgi_temp:rw,noexec,nosuid,size=256M
+      - /var/cache/nginx/uwsgi_temp:rw,noexec,nosuid,size=256M
+      - /var/cache/nginx/scgi_temp:rw,noexec,nosuid,size=256M
+
+  backend:
+    # build: ./backend
+    image: ${DOCKER_USER:-tihdizer}/docker-project-backend:latest
+    restart: unless-stopped
+    expose:
+      - "8081"
+    networks:
+      - bridge
+    deploy:
+      resources:
+        limits:
+          cpus: ${BACKEND_CPUS:-1}
+          memory: ${BACKEND_RAM:-256M}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8081/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  bridge:
+    driver: bridge
